@@ -56,6 +56,7 @@ const playThresholdAlert = () => { tone(1040, 160, "sine", 0.2, 0); tone(1040, 1
 
 export default function Page() {
   const [tab, setTab] = useState("overview");
+  const [menuOpen, setMenuOpen] = useState(false);
   const [devices, setDevices] = useState([]);
   const [totalDevices, setTotalDevices] = useState(null);
   const [falls, setFalls] = useState([]);
@@ -135,12 +136,13 @@ export default function Page() {
 
   return (
     <>
-      <Sidebar tab={tab} setTab={setTab} />
+      <Sidebar tab={tab} setTab={setTab} open={menuOpen} onClose={() => setMenuOpen(false)} />
       <div className="flex-1 flex flex-col min-h-screen md:ml-[260px] w-full">
         <TopBar
           title={TITLES[tab]}
           online={!error}
           updatedText={error ? null : `atualizado ${fmtTime(updatedAt)} · auto ${REFRESH_MS / 1000}s`}
+          onMenu={() => setMenuOpen(true)}
         />
         <main className="p-gutter md:p-8 w-full max-w-[1440px] mx-auto">
           <div className="flex justify-end mb-4">

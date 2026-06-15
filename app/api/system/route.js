@@ -12,6 +12,14 @@ async function cpuSnapshot() {
 }
 
 export async function GET() {
+  // Na Vercel (serverless) o /proc é do container efêmero da Vercel, não do
+  // servidor (EC2). Retorna indisponível para não exibir CPU/RAM enganosos.
+  if (process.env.VERCEL) {
+    return Response.json(
+      { error: "Métricas de sistema indisponíveis na Vercel (o dashboard não roda no servidor)." },
+      { status: 503 }
+    );
+  }
   try {
     const a = await cpuSnapshot();
     await new Promise((r) => setTimeout(r, 200));
