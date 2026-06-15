@@ -105,7 +105,7 @@ spacing:
 ## Brand & Style
 The design system focuses on high-stakes reliability and technical precision. Designed for healthcare operators and family monitors, the visual language balances the urgency of emergency response with the analytical depth of an enterprise SaaS platform.
 
-The style is **Modern Corporate**, utilizing a sophisticated dark-themed palette to reduce eye strain during long monitoring shifts. It draws inspiration from high-performance developer tools, utilizing crisp borders, subtle depth, and intentional data density. The emotional response is one of "calm vigilance"—the interface feels steady and professional, ensuring that when an alert (Red) appears, it carries maximum visual weight against the muted navy background.
+The style is **Modern Corporate**, utilizing a sophisticated dark-themed palette to reduce eye strain during long monitoring shifts. It draws inspiration from high-performance developer tools, utilizing crisp borders, subtle depth, and intentional data density. The emotional response is one of "calm vigilance"-the interface feels steady and professional, ensuring that when an alert (Red) appears, it carries maximum visual weight against the muted navy background.
 
 ## Colors
 The color architecture is built on a deep navy foundation to provide maximum contrast for status indicators.
@@ -126,7 +126,7 @@ The layout uses a **fixed-fluid hybrid model**.
 
 - **Sidebar:** A fixed 260px left vertical navigation houses the primary branding and device groups.
 - **Main Content:** A fluid 12-column grid with a 24px gutter. 
-- **Density:** Maintain a professional "SaaS density"—elements are packed closely enough to see significant data at a glance, but separated by strict 12px or 24px increments to prevent visual clutter.
+- **Density:** Maintain a professional "SaaS density"-elements are packed closely enough to see significant data at a glance, but separated by strict 12px or 24px increments to prevent visual clutter.
 - **Breakpoints:** On tablet, the sidebar collapses into a narrow icon-only rail. On mobile, the sidebar moves to a bottom navigation bar or a hamburger menu, and the 12-column grid collapses to a single column with 16px side margins.
 
 ## Elevation & Depth

@@ -44,7 +44,7 @@ export default function DeviceCharts({ deviceId, deviceName }) {
     <div className="space-y-6">
       <div>
         <p className="text-label-caps text-on-surface-variant uppercase mb-2">
-          Magnitude da aceleração (g) — últimos 30 min
+          Magnitude da aceleração (g) - últimos 30 min
         </p>
         <div className="w-full h-[200px]">
           <ResponsiveContainer>
@@ -68,7 +68,7 @@ export default function DeviceCharts({ deviceId, deviceName }) {
 
       <div>
         <p className="text-label-caps text-on-surface-variant uppercase mb-2">
-          Eixos do acelerômetro (g) — x / y / z
+          Eixos do acelerômetro (g) - x / y / z
         </p>
         <div className="w-full h-[200px]">
           <ResponsiveContainer>

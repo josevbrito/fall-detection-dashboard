@@ -4,7 +4,7 @@ Dashboard web (Next.js) que consome a **API REST do ThingsBoard** e mostra a
 operação do sistema de detecção de quedas: total de devices, quedas detectadas
 ao vivo e gráfico de magnitude da aceleração por device.
 
-É mais um componente da arquitetura distribuída — um **cliente de visualização**
+É mais um componente da arquitetura distribuída - um **cliente de visualização**
 que fala com o middleware (ThingsBoard) via HTTP, separado dos sensores.
 
 ```
@@ -14,7 +14,7 @@ navegador ──▶ Next.js (este app) ──▶ ThingsBoard REST API ──▶ 
 
 ## Por que via API REST (e não Postgres direto)
 O ThingsBoard guarda séries temporais numa tabela `ts_kv` com dicionário de
-chaves e IDs de entidade — consultar no SQL cru é frágil. A API REST entrega os
+chaves e IDs de entidade - consultar no SQL cru é frágil. A API REST entrega os
 mesmos dados em JSON limpo, com filtro por device e por tempo. O JWT é obtido e
 cacheado **no servidor Next** (rotas `app/api/*`), nunca exposto ao navegador.
 

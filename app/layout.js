@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "FallGuard — Dashboard",
+  title: "FallGuard - Dashboard",
   description: "Monitoramento de detecção de quedas (ThingsBoard)",
 };
 

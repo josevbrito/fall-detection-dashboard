@@ -20,17 +20,6 @@ export default function TopBar({ title, online, updatedText }) {
           <span className="hidden lg:inline text-on-surface-variant text-[11px]">{updatedText}</span>
         )}
       </div>
-      <div className="flex items-center gap-2">
-        <button className="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
-          <span className="material-symbols-outlined">notifications</span>
-        </button>
-        <button className="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container-high">
-          <span className="material-symbols-outlined">settings</span>
-        </button>
-        <div className="h-8 w-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface-variant ml-1">
-          <span className="material-symbols-outlined" style={{ fontSize: 20 }}>person</span>
-        </div>
-      </div>
     </header>
   );
 }

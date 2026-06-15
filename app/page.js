@@ -21,9 +21,9 @@ const TITLES = {
   system: "Sistema",
 };
 
-const fmtTime = (ts) => (ts ? new Date(ts).toLocaleTimeString("pt-BR") : "—");
+const fmtTime = (ts) => (ts ? new Date(ts).toLocaleTimeString("pt-BR") : "-");
 const num = (v, d = 0) =>
-  v == null || Number.isNaN(Number(v)) ? "—" : Number(v).toLocaleString("pt-BR", { maximumFractionDigits: d });
+  v == null || Number.isNaN(Number(v)) ? "-" : Number(v).toLocaleString("pt-BR", { maximumFractionDigits: d });
 
 /* ============ áudio (Web Audio API, sem assets) ============ */
 let _audioCtx = null;
@@ -233,7 +233,7 @@ function FallsTable({ falls, onPick, selectedName, compact }) {
             >
               <td className="py-3 px-6 font-mono-data text-on-surface-variant group-hover:text-primary transition-colors">{f.name}</td>
               <td className="py-3 px-6 text-on-surface-variant">{fmtTime(f.ts)}</td>
-              {showImpact && <td className="py-3 px-6 font-mono-data">{f.impact != null ? f.impact.toFixed(2) : f.magnitude != null ? f.magnitude.toFixed(2) : "—"}</td>}
+              {showImpact && <td className="py-3 px-6 font-mono-data">{f.impact != null ? f.impact.toFixed(2) : f.magnitude != null ? f.magnitude.toFixed(2) : "-"}</td>}
               <td className="py-3 px-6 text-right"><FallBadge /></td>
             </tr>
           ))}
@@ -257,7 +257,7 @@ function Overview({ totalDevices, fallTotal, fallActive, fallWindow, perf, sys, 
         <Kpi label={`Quedas (${fallWindow} min)`} icon="warning" value={num(fallTotal)} accent="error">
           <div className="mt-2"><span className="text-label-caps text-error-container">{fallActive > 0 ? `${num(fallActive)} ainda em queda agora` : "Nenhuma queda ativa agora"}</span></div>
         </Kpi>
-        <Kpi label="Throughput (último teste)" icon="speed" value={perf ? num(perf.metrics.throughput_msg_per_s, 0) : "—"} unit="msg/s" accent="secondary-fixed-dim">
+        <Kpi label="Throughput (último teste)" icon="speed" value={perf ? num(perf.metrics.throughput_msg_per_s, 0) : "-"} unit="msg/s" accent="secondary-fixed-dim">
           <div className="mt-3 h-8 w-full">
             <svg className="w-full h-full overflow-visible" preserveAspectRatio="none" viewBox="0 0 100 30">
               <defs>
@@ -271,7 +271,7 @@ function Overview({ totalDevices, fallTotal, fallActive, fallWindow, perf, sys, 
             </svg>
           </div>
         </Kpi>
-        <Kpi label="CPU servidor" icon="memory" value={sys ? num(sys.cpuPct, 1) : "—"} unit="%">
+        <Kpi label="CPU servidor" icon="memory" value={sys ? num(sys.cpuPct, 1) : "-"} unit="%">
           <div className="mt-4 w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
             <div className="bg-primary h-1.5 rounded-full transition-all" style={{ width: `${sys?.cpuPct || 0}%` }} />
           </div>
@@ -322,21 +322,60 @@ function Performance({ perf }) {
     return (
       <Card className="p-6">
         <h2 className="text-title-sm mb-2">Sem dados de desempenho ainda</h2>
-        <p className="text-on-surface-variant text-body-sm">Rode um load test (<span className="font-mono-data">client.sh</span>/<span className="font-mono-data">client.ps1</span>) — ao terminar, ele publica o resumo no ThingsBoard e aparece aqui.</p>
+        <p className="text-on-surface-variant text-body-sm">Rode um load test (<span className="font-mono-data">client.sh</span>/<span className="font-mono-data">client.ps1</span>) - ao terminar, ele publica o resumo no ThingsBoard e aparece aqui.</p>
       </Card>
     );
   }
   const m = perf.metrics;
   const maxP = Math.max(m.p50_latency_ms, m.p70_latency_ms, m.p95_latency_ms, m.p99_latency_ms, 1);
   const rows = [["p50", m.p50_latency_ms], ["p70", m.p70_latency_ms], ["p95", m.p95_latency_ms], ["p99", m.p99_latency_ms]];
+  const chartTip = { background: "#0b0e15", border: "1px solid #424754", borderRadius: 10, fontSize: 12 };
   return (
     <>
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-2">
+          <span className={"w-2 h-2 rounded-full " + (perf.live ? "bg-ok status-pulse" : "bg-outline")} />
+          <span className="text-label-caps uppercase text-on-surface-variant">
+            {perf.live ? "Teste em andamento - ao vivo" : "Nenhum teste rodando agora"}
+          </span>
+        </div>
+        <span className="text-[12px] text-on-surface-variant">
+          {perf.live ? "atualizando a cada 5s" : `última atualização ${fmtTime(perf.updatedAt)}`}
+        </span>
+      </div>
+
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-stack-gap md:gap-gutter mb-8">
         <Kpi label="Throughput" icon="speed" value={num(m.throughput_msg_per_s, 0)} unit="msg/s" accent="secondary-fixed-dim" />
         <Kpi label="Mensagens" icon="bar_chart" value={num(m.total_published)} />
         <Kpi label="Latência média" icon="timer" value={num(m.avg_latency_ms, 1)} unit="ms" />
         <Kpi label="Taxa de erro" icon="check_circle" value={num(m.error_rate_pct, 2)} unit="%" accent={m.error_rate_pct > 0 ? "error" : "ok"} />
       </section>
+
+      <Card className="p-6 mb-8">
+        <h2 className="text-title-sm mb-4 flex items-center gap-2"><span className="material-symbols-outlined text-secondary-fixed-dim">show_chart</span> Throughput ao vivo <span className="text-on-surface-variant text-body-sm">(msg/s · últimos 30 min)</span></h2>
+        {perf.series && perf.series.length > 1 ? (
+          <div className="w-full h-[240px]">
+            <ResponsiveContainer>
+              <AreaChart data={perf.series}>
+                <defs>
+                  <linearGradient id="gthr" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#2fd9f4" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="#2fd9f4" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid stroke="#424754" strokeDasharray="3 3" vertical={false} />
+                <XAxis dataKey="ts" tickFormatter={fmtTime} stroke="#8c909f" fontSize={11} />
+                <YAxis stroke="#8c909f" fontSize={11} />
+                <Tooltip labelFormatter={fmtTime} contentStyle={chartTip} />
+                <Area type="monotone" dataKey="throughput_msg_per_s" name="msg/s" stroke="#2fd9f4" fill="url(#gthr)" strokeWidth={2} isAnimationActive={false} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        ) : (
+          <div className="text-on-surface-variant text-body-sm py-8 text-center">Aguardando pontos do teste - o load test publica a cada 5s enquanto roda.</div>
+        )}
+      </Card>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
         <Card className="p-6">
           <h2 className="text-title-sm mb-5 flex items-center gap-2"><span className="material-symbols-outlined text-primary">leaderboard</span> Latência por percentil</h2>
@@ -364,8 +403,8 @@ function Performance({ perf }) {
           </table>
           {perf.updatedAt && (
             <div className="mt-4 pt-3 border-t border-outline-variant/50 flex justify-between text-[12px] text-on-surface-variant">
-              <span>Status: <span className="text-ok">Completa</span></span>
-              <span>Último teste: {new Date(perf.updatedAt).toLocaleString("pt-BR")}</span>
+              <span>Status: <span className={perf.live ? "text-ok" : "text-on-surface-variant"}>{perf.live ? "Em andamento" : "Concluído"}</span></span>
+              <span>{perf.live ? "Atualizado" : "Último teste"}: {new Date(perf.updatedAt).toLocaleString("pt-BR")}</span>
             </div>
           )}
         </Card>

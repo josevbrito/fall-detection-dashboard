@@ -1,4 +1,4 @@
-// GET /api/devices — lista devices (id, nome) e total.
+// GET /api/devices - lista devices (id, nome) e total.
 import { tbGet } from "@/lib/thingsboard";
 
 export const dynamic = "force-dynamic";

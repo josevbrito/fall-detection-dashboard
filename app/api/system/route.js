@@ -1,4 +1,4 @@
-// GET /api/system — CPU% e RAM do host do servidor (lê /proc, Linux/WSL).
+// GET /api/system - CPU% e RAM do host do servidor (lê /proc, Linux/WSL).
 import { readFile } from "fs/promises";
 
 export const dynamic = "force-dynamic";

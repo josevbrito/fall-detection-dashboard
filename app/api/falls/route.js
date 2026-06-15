@@ -1,4 +1,4 @@
-// GET /api/falls — quedas dos últimos N minutos (default 30), via alarmes.
+// GET /api/falls - quedas dos últimos N minutos (default 30), via alarmes.
 // Usa os alarmes QUEDA_DETECTADA que o device profile gera quando
 // fall_detected=true. Indexado por tempo no TB → rápido e não perde quedas
 // transitórias (o fall_detected fica true por só ~500ms).

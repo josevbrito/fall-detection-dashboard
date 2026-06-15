@@ -1,4 +1,4 @@
-// GET /api/telemetry?deviceId=...&minutes=15 — séries temporais de um device.
+// GET /api/telemetry?deviceId=...&minutes=15 - séries temporais de um device.
 import { tbGet } from "@/lib/thingsboard";
 
 export const dynamic = "force-dynamic";

@@ -44,17 +44,6 @@ export default function Sidebar({ tab, setTab }) {
           );
         })}
       </div>
-
-      <div className="pt-6 border-t border-outline-variant/50 space-y-2 mt-auto">
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors text-left">
-          <Icon name="account_circle" />
-          <span className="text-body-md">Perfil</span>
-        </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2.5 rounded-md text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors text-left">
-          <Icon name="logout" />
-          <span className="text-body-md">Sair</span>
-        </button>
-      </div>
     </nav>
   );
 }
