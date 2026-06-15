@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Desempenho - FallGuard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#424754",
+                        "secondary-fixed": "#a2eeff",
+                        "outline": "#8c909f",
+                        "primary-container": "#4d8eff",
+                        "on-secondary-container": "#00515d",
+                        "on-secondary-fixed-variant": "#004e5a",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#502400",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container-high": "#272a31",
+                        "tertiary-container": "#df7412",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container": "#1d2027",
+                        "surface-container-highest": "#32353c",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-bright": "#363941",
+                        "primary": "#adc6ff",
+                        "tertiary": "#ffb786",
+                        "surface-variant": "#32353c",
+                        "on-surface": "#e1e2ec",
+                        "on-secondary": "#00363e",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-primary": "#002e6a",
+                        "secondary-container": "#00cbe6",
+                        "surface-tint": "#adc6ff",
+                        "surface-container-low": "#191b23",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-primary-container": "#00285d",
+                        "on-background": "#e1e2ec",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-container": "#461f00",
+                        "surface-dim": "#10131a",
+                        "secondary-fixed-dim": "#2fd9f4",
+                        "on-secondary-fixed": "#001f25",
+                        "surface": "#10131a",
+                        "inverse-on-surface": "#2e3038",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "secondary": "#5de6ff",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-tertiary-fixed": "#311400",
+                        "inverse-primary": "#005ac2",
+                        "on-primary-fixed": "#001a42",
+                        "background": "#10131a",
+                        "error": "#ffb4ab",
+                        
+                        // Custom additions mapped to design system instructions
+                        "panel": "#151c2e",
+                        "panel-border": "#2a3550",
+                        "healthy-green": "#34d399",
+                        "alert-red": "#f87171"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "stack-gap": "12px",
+                        "sidebar-width": "260px",
+                        "container-max": "1440px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "mono-data": ["monospace"],
+                        "display-lg": ["Inter"],
+                        "title-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "mono-data": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b1120;
+            color: #e1e2ec;
+        }
+        .pulse-status {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .5; transform: scale(1.1); }
+        }
+        
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b1120; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a3550; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #424754; 
+        }
+    </style>
+</head>
+<body class="min-h-screen font-sans antialiased overflow-x-hidden flex">
+<!-- SideNavBar Component -->
+<nav class="hidden md:flex flex-col h-full py-6 px-4 bg-surface-container-lowest dark:bg-surface-container-lowest fixed left-0 top-0 w-[260px] border-r border-outline-variant z-50 transition-all duration-300">
+<div class="flex items-center gap-3 px-2 mb-8">
+<span class="material-symbols-outlined text-[32px] text-white">shield</span>
+<div>
+<div class="font-display-lg text-[24px] leading-none font-bold text-on-surface tracking-tight">FallGuard</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant mt-1">Monitoramento IoT</div>
+</div>
+</div>
+<div class="flex-1 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-body-md text-body-md">Visão Geral</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">emergency_home</span>
+<span class="font-body-md text-body-md">Quedas</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg bg-primary/10 text-primary font-bold opacity-80 scale-[0.99] transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">insights</span>
+<span class="font-body-md text-body-md">Desempenho</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">settings</span>
+<span class="font-body-md text-body-md">Sistema</span>
+</a>
+</div>
+<div class="mt-auto border-t border-outline-variant/50 pt-4 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+<span class="font-body-md text-body-md">Perfil</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">logout</span>
+<span class="font-body-md text-body-md">Sair</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-0 md:ml-[260px] min-w-0 flex flex-col h-screen">
+<!-- TopAppBar Component -->
+<header class="sticky top-0 z-40 w-full bg-surface-container-low/80 dark:bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant flex justify-between items-center h-16 px-gutter">
+<div class="flex items-center gap-4">
+<div class="md:hidden text-white cursor-pointer mr-2">
+<span class="material-symbols-outlined">menu</span>
+</div>
+<h1 class="font-headline-md text-headline-md text-on-surface">Desempenho</h1>
+<div class="hidden sm:flex items-center gap-2 px-3 py-1 bg-surface-container rounded-full border border-outline-variant/50 ml-4">
+<div class="w-2 h-2 rounded-full bg-[#34d399] pulse-status"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-[10px]">Sistema Operacional</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container duration-150">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 rounded-full text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container duration-150">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="ml-2 w-8 h-8 rounded-full bg-surface-container border border-outline-variant overflow-hidden">
+<img alt="Foto do Usuário" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIjDK1hnc6mvLG__Fo5dfVe6XOi0Yagulq-zAcuVrubYPwAR3oMQqvJ9dH-oGfw9fs9D0c6o1HTVm665emifnNP0AMv5esV0DWA8MibaUv2EsOyS_PS5jYTZ4WWrV2EDDk9Ojkvz8L0KT-BE2c6hEvg1g2o012vWL4tuzk2wy5pz08HK2ztwTZGXrHBuoRszZowIfUmcXllJoeJz3tgI-0MZ7f4EeTH253eShedE_CD-Vgz8JJChPWoq0zBoef266Q2ccwJCgInIU"/>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 overflow-y-auto p-4 sm:p-gutter">
+<div class="max-w-[1440px] mx-auto w-full flex flex-col gap-6">
+<!-- KPI Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- KPI 1 -->
+<div class="bg-[#151c2e] border border-[#2a3550] rounded-xl p-5 hover:bg-[#1a233a] transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Throughput</span>
+<span class="material-symbols-outlined text-secondary-fixed text-[20px] opacity-70 group-hover:opacity-100 transition-opacity">speed</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-secondary-fixed tracking-tight">1.066</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">msg/s</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="bg-[#151c2e] border border-[#2a3550] rounded-xl p-5 hover:bg-[#1a233a] transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Mensagens</span>
+<span class="material-symbols-outlined text-on-surface-variant text-[20px] opacity-70 group-hover:opacity-100 transition-opacity">stacked_bar_chart</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-on-surface tracking-tight">19.720</span>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="bg-[#151c2e] border border-[#2a3550] rounded-xl p-5 hover:bg-[#1a233a] transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Latência média</span>
+<span class="material-symbols-outlined text-primary text-[20px] opacity-70 group-hover:opacity-100 transition-opacity">timer</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-primary tracking-tight">43,5</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">ms</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="bg-[#151c2e] border border-[#2a3550] rounded-xl p-5 hover:bg-[#1a233a] transition-colors group">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Taxa de erro</span>
+<span class="material-symbols-outlined text-[#34d399] text-[20px] opacity-70 group-hover:opacity-100 transition-opacity">verified</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-display-lg text-display-lg text-[#34d399] tracking-tight">0,00</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">%</span>
+</div>
+</div>
+</div>
+<!-- Grid Section -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+<!-- Latency Percentiles Card -->
+<div class="bg-[#151c2e] border border-[#2a3550] rounded-xl p-6 flex flex-col">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">bar_chart</span>
+<h2 class="font-title-sm text-title-sm text-on-surface">Latência por percentil</h2>
+</div>
+<div class="flex flex-col gap-5 mt-2">
+<!-- p50 -->
+<div>
+<div class="flex justify-between mb-1">
+<span class="font-mono-data text-mono-data text-on-surface-variant">p50</span>
+<span class="font-mono-data text-mono-data text-on-surface">40,1 ms</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[20%] rounded-full"></div>
+</div>
+</div>
+<!-- p70 -->
+<div>
+<div class="flex justify-between mb-1">
+<span class="font-mono-data text-mono-data text-on-surface-variant">p70</span>
+<span class="font-mono-data text-mono-data text-on-surface">48,0 ms</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[30%] rounded-full"></div>
+</div>
+</div>
+<!-- p95 -->
+<div>
+<div class="flex justify-between mb-1">
+<span class="font-mono-data text-mono-data text-on-surface-variant">p95</span>
+<span class="font-mono-data text-mono-data text-on-surface">95,2 ms</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-tertiary w-[60%] rounded-full"></div>
+</div>
+</div>
+<!-- p99 -->
+<div>
+<div class="flex justify-between mb-1">
+<span class="font-mono-data text-mono-data text-on-surface-variant">p99</span>
+<span class="font-mono-data text-mono-data text-error">127,5 ms</span>
+</div>
+<div class="h-2 w-full bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary via-tertiary to-error w-[85%] rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Experiment Summary Card -->
+<div class="bg-[#151c2e] border border-[#2a3550] rounded-xl flex flex-col overflow-hidden">
+<div class="p-6 pb-4 border-b border-[#2a3550]/50 flex items-center gap-2">
+<span class="material-symbols-outlined text-on-surface-variant">list_alt</span>
+<h2 class="font-title-sm text-title-sm text-on-surface">Resumo do experimento</h2>
+</div>
+<div class="flex-1 p-0">
+<table class="w-full text-left">
+<tbody>
+<tr class="border-b border-[#2a3550]/30 hover:bg-[#1a233a] transition-colors">
+<td class="py-3 px-6 font-body-sm text-body-sm text-on-surface-variant">Devices no teste</td>
+<td class="py-3 px-6 font-mono-data text-mono-data text-on-surface text-right">1.972</td>
+</tr>
+<tr class="border-b border-[#2a3550]/30 hover:bg-[#1a233a] transition-colors">
+<td class="py-3 px-6 font-body-sm text-body-sm text-on-surface-variant">Requisições/device</td>
+<td class="py-3 px-6 font-mono-data text-mono-data text-on-surface text-right">10</td>
+</tr>
+<tr class="border-b border-[#2a3550]/30 hover:bg-[#1a233a] transition-colors">
+<td class="py-3 px-6 font-body-sm text-body-sm text-on-surface-variant">Intervalo</td>
+<td class="py-3 px-6 font-mono-data text-mono-data text-on-surface text-right">200 ms</td>
+</tr>
+<tr class="border-b border-[#2a3550]/30 hover:bg-[#1a233a] transition-colors">
+<td class="py-3 px-6 font-body-sm text-body-sm text-on-surface-variant">Total publicado</td>
+<td class="py-3 px-6 font-mono-data text-mono-data text-on-surface text-right">19.720</td>
+</tr>
+<tr class="border-b border-[#2a3550]/30 hover:bg-[#1a233a] transition-colors">
+<td class="py-3 px-6 font-body-sm text-body-sm text-on-surface-variant">Erros</td>
+<td class="py-3 px-6 font-mono-data text-mono-data text-[#34d399] text-right">0</td>
+</tr>
+<tr class="hover:bg-[#1a233a] transition-colors">
+<td class="py-3 px-6 font-body-sm text-body-sm text-on-surface-variant">Quedas simuladas</td>
+<td class="py-3 px-6 font-mono-data text-mono-data text-on-surface text-right">50</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface-container-highest/20 border-t border-[#2a3550] flex justify-between items-center mt-auto">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Status da Simulação: Completa</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant opacity-70">Último teste: 14/06/2026 20:31</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

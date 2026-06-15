@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>FallGuard - Quedas</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline-variant": "#424754",
+                        "secondary-fixed": "#a2eeff",
+                        "outline": "#8c909f",
+                        "primary-container": "#4d8eff",
+                        "on-secondary-container": "#00515d",
+                        "on-secondary-fixed-variant": "#004e5a",
+                        "error-container": "#93000a",
+                        "on-tertiary": "#502400",
+                        "on-error": "#690005",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container-high": "#272a31",
+                        "tertiary-container": "#df7412",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-container": "#1d2027",
+                        "surface-container-highest": "#32353c",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-bright": "#363941",
+                        "primary": "#adc6ff",
+                        "tertiary": "#ffb786",
+                        "surface-variant": "#32353c",
+                        "on-surface": "#e1e2ec",
+                        "on-secondary": "#00363e",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-primary": "#002e6a",
+                        "secondary-container": "#00cbe6",
+                        "surface-tint": "#adc6ff",
+                        "surface-container-low": "#191b23",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "on-primary-container": "#00285d",
+                        "on-background": "#e1e2ec",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-container": "#461f00",
+                        "surface-dim": "#10131a",
+                        "secondary-fixed-dim": "#2fd9f4",
+                        "on-secondary-fixed": "#001f25",
+                        "surface": "#10131a",
+                        "inverse-on-surface": "#2e3038",
+                        "inverse-surface": "#e1e2ec",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "secondary": "#5de6ff",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface-container-lowest": "#0b0e15",
+                        "on-tertiary-fixed": "#311400",
+                        "inverse-primary": "#005ac2",
+                        "on-primary-fixed": "#001a42",
+                        "background": "#10131a",
+                        "error": "#ffb4ab"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-mobile": "16px",
+                        "stack-gap": "12px",
+                        "sidebar-width": "260px",
+                        "container-max": "1440px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "mono-data": ["monospace"],
+                        "display-lg": ["Inter"],
+                        "title-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "label-caps": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "mono-data": ["13px", { "lineHeight": "16px", "fontWeight": "500" }],
+                        "display-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "title-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .pulse-green {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body-md overflow-x-hidden">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-full w-[260px] bg-surface-container-lowest dark:bg-surface-container-lowest border-r border-outline-variant flex flex-col py-6 px-4 z-50 md:flex hidden">
+<div class="flex items-center gap-3 mb-8 px-2">
+<span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings: 'FILL' 1;">shield</span>
+<div>
+<h1 class="font-display-lg text-display-lg font-bold text-on-surface">FallGuard</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Monitoramento IoT</p>
+</div>
+</div>
+<ul class="flex-1 space-y-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 opacity-80 scale-[0.99]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-title-sm text-title-sm">Visão Geral</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary font-bold opacity-80 scale-[0.99]" href="#">
+<span class="material-symbols-outlined">emergency_home</span>
+<span class="font-title-sm text-title-sm">Quedas</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 opacity-80 scale-[0.99]" href="#">
+<span class="material-symbols-outlined">insights</span>
+<span class="font-title-sm text-title-sm">Desempenho</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 opacity-80 scale-[0.99]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-title-sm text-title-sm">Sistema</span>
+</a>
+</li>
+</ul>
+<div class="mt-auto border-t border-outline-variant pt-4">
+<ul class="space-y-2">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 opacity-80 scale-[0.99]" href="#">
+<span class="material-symbols-outlined">account_circle</span>
+<span class="font-title-sm text-title-sm">Perfil</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high transition-colors duration-200 opacity-80 scale-[0.99]" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-title-sm text-title-sm">Sair</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="md:ml-[260px] w-full md:w-[calc(100%-260px)] min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="sticky top-0 z-40 w-full bg-surface-container-low/80 dark:bg-surface-container-low/80 border-b border-outline-variant backdrop-blur-md flex justify-between items-center h-16 px-gutter">
+<div class="flex items-center gap-4">
+<button class="md:hidden text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h2 class="font-headline-md text-headline-md text-on-surface">Quedas</h2>
+<div class="flex items-center gap-2 bg-surface-container-high px-3 py-1 rounded-full border border-outline-variant ml-4 hidden sm:flex">
+<div class="w-2 h-2 rounded-full bg-[#34d399] pulse-green"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Sistema Online</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-transform duration-150 active:scale-95">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-transform duration-150 active:scale-95">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant overflow-hidden flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">person</span>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 p-gutter max-w-container-max mx-auto w-full flex flex-col gap-gutter">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Section 1: Telemetry -->
+<div class="lg:col-span-7 flex flex-col gap-stack-gap">
+<div class="bg-[#151c2e] border border-[#2a3550] rounded-xl p-6 flex-1 shadow-lg relative overflow-hidden">
+<div class="absolute inset-0 pointer-events-none bg-gradient-to-b from-surface-container-lowest/50 to-transparent"></div>
+<div class="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">monitoring</span>
+                                Telemetria do device
+                            </h3>
+<div class="relative w-full sm:w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-[#0b1120] border border-[#2a3550] rounded-lg pl-9 pr-3 py-2 text-body-sm text-on-surface focus:border-primary focus:ring-1 focus:ring-primary focus:outline-none transition-all placeholder:text-outline" placeholder="Buscar device (ex: fall-sensor-000123)" type="text"/>
+</div>
+</div>
+<div class="space-y-6 relative z-10">
+<!-- Chart 1: Magnitude -->
+<div class="bg-[#0b1120] border border-[#2a3550] rounded-lg p-4">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Magnitude da aceleração (g) — últimos 30 min</span>
+<span class="font-mono-data text-mono-data text-secondary">2.4g max</span>
+</div>
+<div class="h-32 relative w-full border-b border-l border-[#2a3550]">
+<!-- Decorative Chart Placeholder -->
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Limiar queda line -->
+<line stroke="#f87171" stroke-dasharray="2,2" stroke-width="0.5" x1="0" x2="100" y1="40" y2="40"></line>
+<text fill="#f87171" font-family="monospace" font-size="3" text-anchor="end" x="98" y="38">limiar queda</text>
+<!-- Data line -->
+<path d="M0,80 Q10,85 20,70 T40,75 T60,30 T70,80 T90,75 T100,85" fill="none" stroke="#5de6ff" stroke-width="1.5"></path>
+<path d="M0,80 Q10,85 20,70 T40,75 T60,30 T70,80 T90,75 T100,85 L100,100 L0,100 Z" fill="url(#cyan-grad)" opacity="0.2"></path>
+<!-- Highlight dot at peak -->
+<circle cx="60" cy="30" fill="#5de6ff" r="1.5"></circle>
+<circle class="animate-ping" cx="60" cy="30" fill="#5de6ff" opacity="0.3" r="3"></circle>
+</svg>
+<defs>
+<lineargradient id="cyan-grad" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#5de6ff"></stop>
+<stop offset="100%" stop-color="#0b1120"></stop>
+</lineargradient>
+</defs>
+</div>
+<div class="flex justify-between mt-1 px-1">
+<span class="text-[10px] text-outline">10:00</span>
+<span class="text-[10px] text-outline">10:15</span>
+<span class="text-[10px] text-outline">10:30</span>
+</div>
+</div>
+<!-- Chart 2: Eixos -->
+<div class="bg-[#0b1120] border border-[#2a3550] rounded-lg p-4">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Eixos do acelerômetro (g) — x / y / z</span>
+<div class="flex gap-3">
+<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#4d8eff]"></span><span class="text-[10px] text-outline">X</span></div>
+<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#a855f7]"></span><span class="text-[10px] text-outline">Y</span></div>
+<div class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-[#fbbf24]"></span><span class="text-[10px] text-outline">Z</span></div>
+</div>
+</div>
+<div class="h-24 relative w-full border-b border-l border-[#2a3550]">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Center line 0g -->
+<line stroke="#424754" stroke-dasharray="1,1" stroke-width="0.5" x1="0" x2="100" y1="50" y2="50"></line>
+<!-- X line (Blue) -->
+<path d="M0,45 Q20,50 40,40 T60,20 T80,45 T100,50" fill="none" stroke="#4d8eff" stroke-width="1"></path>
+<!-- Y line (Purple) -->
+<path d="M0,55 Q20,60 40,55 T60,80 T80,50 T100,55" fill="none" stroke="#a855f7" stroke-width="1"></path>
+<!-- Z line (Amber) -->
+<path d="M0,10 Q20,15 40,10 T60,15 T80,10 T100,12" fill="none" stroke="#fbbf24" stroke-width="1"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Detected Falls Table -->
+<div class="lg:col-span-5 flex flex-col gap-stack-gap">
+<div class="bg-[#151c2e] border border-[#2a3550] rounded-xl flex-1 shadow-lg overflow-hidden flex flex-col">
+<div class="p-6 border-b border-[#2a3550] bg-gradient-to-r from-error/10 to-transparent">
+<h3 class="font-title-sm text-title-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-error">warning</span>
+                                🚨 Quedas detectadas (9)
+                            </h3>
+</div>
+<div class="flex-1 overflow-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-[#0b1120] sticky top-0 z-10 border-b border-[#2a3550]">
+<tr>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant font-medium">Device</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant font-medium">Horário</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant font-medium">Impacto (g)</th>
+<th class="py-3 px-4 font-label-caps text-label-caps text-on-surface-variant font-medium text-right">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-[#2a3550]">
+<tr class="hover:bg-surface-container-high transition-colors group cursor-pointer border-l-2 border-l-error bg-error/5">
+<td class="py-3 px-4 font-mono-data text-mono-data text-primary">fall-sensor-000123</td>
+<td class="py-3 px-4 text-outline">10:24:15</td>
+<td class="py-3 px-4 font-mono-data text-mono-data">3.8g</td>
+<td class="py-3 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-error/20 text-error border border-error/30 uppercase tracking-wider">queda</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group cursor-pointer">
+<td class="py-3 px-4 font-mono-data text-mono-data text-primary">fall-sensor-000089</td>
+<td class="py-3 px-4 text-outline">09:12:44</td>
+<td class="py-3 px-4 font-mono-data text-mono-data">2.9g</td>
+<td class="py-3 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-error/20 text-error border border-error/30 uppercase tracking-wider">queda</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group cursor-pointer">
+<td class="py-3 px-4 font-mono-data text-mono-data text-primary">fall-sensor-000401</td>
+<td class="py-3 px-4 text-outline">08:45:10</td>
+<td class="py-3 px-4 font-mono-data text-mono-data">4.1g</td>
+<td class="py-3 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-error/20 text-error border border-error/30 uppercase tracking-wider">queda</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group cursor-pointer">
+<td class="py-3 px-4 font-mono-data text-mono-data text-primary">fall-sensor-000222</td>
+<td class="py-3 px-4 text-outline">Ontem, 23:15</td>
+<td class="py-3 px-4 font-mono-data text-mono-data">3.2g</td>
+<td class="py-3 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-surface-container-highest text-on-surface-variant border border-outline-variant uppercase tracking-wider">resolvido</span>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-high transition-colors group cursor-pointer">
+<td class="py-3 px-4 font-mono-data text-mono-data text-primary">fall-sensor-000105</td>
+<td class="py-3 px-4 text-outline">Ontem, 18:30</td>
+<td class="py-3 px-4 font-mono-data text-mono-data">2.7g</td>
+<td class="py-3 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-surface-container-highest text-on-surface-variant border border-outline-variant uppercase tracking-wider">resolvido</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 border-t border-[#2a3550] bg-[#0b1120] text-center">
+<button class="font-label-caps text-label-caps text-secondary hover:text-primary transition-colors">Ver histórico completo</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
