@@ -22,6 +22,7 @@ const TITLES = {
 };
 
 const fmtTime = (ts) => (ts ? new Date(ts).toLocaleTimeString("pt-BR") : "-");
+const fmtDateTime = (ts) => (ts ? new Date(ts).toLocaleString("pt-BR") : "-");
 const num = (v, d = 0) =>
   v == null || Number.isNaN(Number(v)) ? "-" : Number(v).toLocaleString("pt-BR", { maximumFractionDigits: d });
 
@@ -63,6 +64,8 @@ export default function Page() {
   const [fallTotal, setFallTotal] = useState(0);
   const [fallActive, setFallActive] = useState(0);
   const [fallWindow, setFallWindow] = useState(30);
+  const [windowEnd, setWindowEnd] = useState(null); // ts da última requisição (fim da janela)
+  const [anchored, setAnchored] = useState(false);  // janela travada num teste real?
   const [perf, setPerf] = useState(null);
   const [sys, setSys] = useState(null);
   const [sysHistory, setSysHistory] = useState([]);
@@ -98,6 +101,8 @@ export default function Page() {
       setFallTotal(f.total || 0);
       setFallActive(f.active || 0);
       setFallWindow(f.windowMin || 30);
+      setWindowEnd(f.windowEnd || null);
+      setAnchored(!!f.anchored);
       setPerf(p && p.available ? p : null);
       setError(null);
       setUpdatedAt(Date.now());
@@ -141,7 +146,15 @@ export default function Page() {
         <TopBar
           title={TITLES[tab]}
           online={!error}
-          updatedText={error ? null : `atualizado ${fmtTime(updatedAt)} · auto ${REFRESH_MS / 1000}s`}
+          updatedText={
+            error
+              ? null
+              : windowEnd
+              ? `janela: últimos ${fallWindow} min até ${fmtDateTime(windowEnd)}` +
+                (anchored ? " (último teste)" : " (ao vivo)") +
+                ` · auto ${REFRESH_MS / 1000}s`
+              : `atualizado ${fmtTime(updatedAt)} · auto ${REFRESH_MS / 1000}s`
+          }
           onMenu={() => setMenuOpen(true)}
         />
         <main className="p-gutter md:p-8 w-full max-w-[1440px] mx-auto">
@@ -163,8 +176,8 @@ export default function Page() {
             </div>
           )}
 
-          {tab === "overview" && <Overview totalDevices={totalDevices} fallTotal={fallTotal} fallActive={fallActive} fallWindow={fallWindow} perf={perf} sys={sys} falls={falls} onOpenFalls={() => setTab("falls")} />}
-          {tab === "falls" && <Falls devices={devices} selected={selected} setSelected={setSelected} falls={falls} fallWindow={fallWindow} deviceName={deviceName} />}
+          {tab === "overview" && <Overview totalDevices={totalDevices} fallTotal={fallTotal} fallActive={fallActive} fallWindow={fallWindow} windowEnd={windowEnd} perf={perf} sys={sys} falls={falls} onOpenFalls={() => setTab("falls")} />}
+          {tab === "falls" && <Falls devices={devices} selected={selected} setSelected={setSelected} falls={falls} fallWindow={fallWindow} windowEnd={windowEnd} deviceName={deviceName} />}
           {tab === "performance" && <Performance perf={perf} />}
           {tab === "system" && <System sys={sys} history={sysHistory} />}
         </main>
@@ -246,7 +259,7 @@ function FallsTable({ falls, onPick, selectedName, compact }) {
 }
 
 /* ============ Visão Geral ============ */
-function Overview({ totalDevices, fallTotal, fallActive, fallWindow, perf, sys, falls, onOpenFalls }) {
+function Overview({ totalDevices, fallTotal, fallActive, fallWindow, windowEnd, perf, sys, falls, onOpenFalls }) {
   return (
     <>
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-stack-gap md:gap-gutter mb-8">
@@ -282,7 +295,7 @@ function Overview({ totalDevices, fallTotal, fallActive, fallWindow, perf, sys, 
 
       <Card className="overflow-hidden">
         <div className="px-6 py-5 border-b border-outline-variant/50 flex justify-between items-center">
-          <h2 className="text-title-sm text-on-surface flex items-center gap-2"><span>🚨</span> Quedas recentes <span className="text-on-surface-variant text-body-sm">(últimos {fallWindow} min)</span></h2>
+          <h2 className="text-title-sm text-on-surface flex items-center gap-2"><span>🚨</span> Quedas recentes <span className="text-on-surface-variant text-body-sm">(últimos {fallWindow} min{windowEnd ? ` até ${fmtDateTime(windowEnd)}` : ""})</span></h2>
           <button onClick={onOpenFalls} className="text-primary hover:text-primary-fixed transition-colors text-label-caps uppercase">Ver Relatório Completo</button>
         </div>
         <FallsTable falls={falls.slice(0, 8)} />
@@ -292,7 +305,7 @@ function Overview({ totalDevices, fallTotal, fallActive, fallWindow, perf, sys, 
 }
 
 /* ============ Quedas ============ */
-function Falls({ devices, selected, setSelected, falls, fallWindow, deviceName }) {
+function Falls({ devices, selected, setSelected, falls, fallWindow, windowEnd, deviceName }) {
   const pick = (name) => { const d = devices.find((x) => x.name === name); if (d) setSelected({ id: d.id, name: d.name }); };
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
@@ -307,7 +320,7 @@ function Falls({ devices, selected, setSelected, falls, fallWindow, deviceName }
       <Card className="overflow-hidden self-start">
         <div className="px-6 py-5 border-b border-outline-variant/50 flex items-center gap-2">
           <span className="material-symbols-outlined text-error">emergency_home</span>
-          <h2 className="text-title-sm text-on-surface">Quedas detectadas <span className="text-on-surface-variant text-body-sm">· últimos {fallWindow} min ({falls.length})</span></h2>
+          <h2 className="text-title-sm text-on-surface">Quedas detectadas <span className="text-on-surface-variant text-body-sm">· últimos {fallWindow} min ({falls.length}){windowEnd ? ` até ${fmtDateTime(windowEnd)}` : ""}</span></h2>
         </div>
         <FallsTable falls={falls} onPick={pick} selectedName={selected?.name} compact />
         <div className="px-6 py-3 border-t border-outline-variant/50 text-center">

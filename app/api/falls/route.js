@@ -15,7 +15,8 @@ export async function GET(request) {
   // Janela ancorada no fim do último teste (mesma âncora de performance/telemetria),
   // não no "agora": [últimaRequisição − 30 min, últimaRequisição]. Cai no now() se
   // nunca houve teste.
-  const end = (await lastLoadTestTs()) ?? Date.now();
+  const lastTs = await lastLoadTestTs();
+  const end = lastTs ?? Date.now();
   const start = end - windowMin * 60 * 1000;
 
   try {
@@ -43,6 +44,8 @@ export async function GET(request) {
       total: data.totalElements ?? falls.length, // quedas na janela
       active, // ainda em queda agora
       windowMin,
+      windowEnd: end, // fim da janela = ts da última requisição (ou now)
+      anchored: lastTs !== null, // true se ancorado num teste real (não no now)
       falls,
     });
   } catch (e) {
