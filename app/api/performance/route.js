@@ -28,14 +28,25 @@ const KEYS = [
 const SERIES_KEYS = ["throughput_msg_per_s", "avg_latency_ms", "p99_latency_ms", "error_rate_pct"];
 
 export async function GET() {
-  const endTs = Date.now();
-  const startTs = endTs - WINDOW_MS;
   try {
     const list = await tbGet(
       "/api/tenant/devices?pageSize=10&page=0&textSearch=load-test-stats"
     );
     const dev = (list.data || []).find((d) => d.name === "load-test-stats");
     if (!dev) return Response.json({ available: false });
+
+    // Janela ancorada no fim do último teste, não no "agora": busca o ponto mais
+    // recente e usa o ts dele como fim da janela. Assim a aba Desempenho fica
+    // travada nos últimos 30 min do último teste mesmo depois que ele termina.
+    const latest = await tbGet(
+      `/api/plugins/telemetry/DEVICE/${dev.id.id}/values/timeseries?keys=${KEYS.join(",")}`
+    );
+    const lastTs = Math.max(
+      0,
+      ...Object.values(latest).flatMap((pts) => pts.map((p) => Number(p.ts)))
+    );
+    const endTs = lastTs > 0 ? lastTs : Date.now();
+    const startTs = endTs - WINDOW_MS;
 
     const ts = await tbGet(
       `/api/plugins/telemetry/DEVICE/${dev.id.id}/values/timeseries` +
@@ -69,7 +80,7 @@ export async function GET() {
 
     return Response.json({
       available: true,
-      live: endTs - updatedAt < LIVE_MS, // teste em andamento?
+      live: Date.now() - updatedAt < LIVE_MS, // teste em andamento? (vs. tempo real)
       metrics,
       updatedAt,
       series,
